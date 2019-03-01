@@ -117,11 +117,142 @@ All the source will be listed at the end of the guide.
   ```
   nano /etc/locale.gen
   ```
-	- Uncomment `en_US.UTF-8 UTF-8` and the line below
+  - Uncomment `en_US.UTF-8 UTF-8` and the line below
   - Now generate locale file 
   ```
 	locale-gen
 	echo LANG=en_US.UTF-8 > /etc/locale.conf
 	export LANG=en_US.UTF-8
   ```
+  
+### 11. Set up mkinitcpio hooks and run
+  - Insert `keyboard` after `autodetct`, but usually it is there already
+  ```
+  nano /etc/mkinitcpio.conf 
+  ```
+  - Run it
+  ```
+  mkinitcpio -p linux
+  ```
+  
+### 12. Set up GRUB/EFI
+  - Install GRUB
+  ```
+  pacman -S grub-efi-x86_64
+  pacman -S efibootmgr
+  grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+  ```
+  - Configure and generate `grub.cfg`
+  ```
+  nano /etc/default/grub
+  ```
+  - Find and modify this line `GRUB_CMDLINE_LINUX_DEFAULT="quiet rootflags=data=writeback libata.force=1:noncq"`
+  - Add this to the end of file
+  ```
+  # fix broken grub.cfg gen
+  GRUB_DISABLE_SUBMENU=y
+  ```
+  - Generate `grub.cfg`
+  ```
+  grub-mkconfig -o boot/grub/grub.cfg
+  ```
+  
+### 13. Create boot.efi
+  > Warning: This guide will use rEFInd to perform dual boot and use an unofficial way to configure it
+  
+  > Nonetheless, it works fine.
+  
+  - Generate `boot.efi` and current directory
+  > remember to `cd` all the way back to `root`, neccessary for rEFInd to work
+  ```
+  grub-mkstandalone -o boot.efi -d usr/lib/grub/x86_64-efi -O x86_64-efi --compress=xz boot/grub/grub.cfg
+  ```
+  > If you decide use apple boot loader, go to source and head to other guides
+  
+### 14. Back to Mac configuration
+  - Head back to MacOS
+  ```
+  exit
+  reboot
+  ```
+  - Hold down `Alt` when boot up and choose Mac and log in
+  - Launch Disk Utility
+  - Format (“Erase”) /dev/sda3 using Mac journaled filesystem (The Boot Loader partition that you created in the beginning)
+  - Create boot file structure
+  > Same as before, disk0sX should be what number you have showing in MacOS
+  ```
+  cd /Volumes/disk0s3
+  mkdir System mach_kernel
+  cd System
+  mkdir Library
+  cd Library
+  mkdir CoreServices
+  cd CoreServices
+  touch SystemVersion.plist
+  ```
+  - Open that file
+  ```
+  nano SystemVersion.plist
+  ```
+  - Copy this configuration
+  ```
+  <xml version="1.0" encoding="utf-8"?>
+  <plist version="1.0">
+  <dict>
+      <key>ProductBuildVersion</key>
+      <string></string>
+      <key>ProductName</key>
+      <string>Linux</string>
+      <key>ProductVersion</key>
+      <string>Arch Linux</string>
+  </dict>
+  </plist>
+  ```
+  
+### 15. Install rEFInd
+  - Download [rEFInd](www.rodsbooks.com/refind/) on your Mac
+  - Go to "Getting rEFInd" ->  "A binary zip file"
+  - Open Terminal
+  - `cd` into `Downloads`
+  - Run `refind-install` and `mountesp`
+  ```
+  sudo ./refind-install
+  sudo ./mountesp
+  ```
+  - After `mountesp`, you will see ESP show up as a drive. Open it, go to /EFI/refind/. Open `refind.conf` with `textedit`
+  - Uncomment the lines `scan_all_linux_kernels` and `also_scan_dirs`
+  - Hide unused boot options:
+  	- Find `dont_scan_volume` add `"Preboot","Root"`
+	- Find `dont_scan_dir` add `EFI/GRUB`
+	> Actually, it depends on what you see during reboot and configure what you don't want to see here
+  *Optional: Change theme:*
+   - [Official website](http://www.rodsbooks.com/refind/themes.html) for theming rEFInd
+   - This guide will use [Minimal theme](https://github.com/EvanPurkhiser/rEFInd-minimal)
+   - Locate your refind EFI directory. (The file that we configure before)
+   - Create a folder called themes inside it(inside `refind`), if it doesn't already exist
+   - Clone/download the whole repository into the themes directory.
+   - Enable the theme add the following at the end of refind.conf
+   ```
+   include themes/rEFInd-minimal/theme.conf
+   ```
+   - Also modify the `menuentry "Arch Linux"` command (comment out the old one if you want to keep it)
+   > We are going to identify Arch manually, this is the part that isn't official. The official one didn't work on mines.
+   
+   > Remember don't use /sda6 if you have different number for root
+   ```
+   menuentry "Arch Linux"{
+   	icon /EFI/refind/themes/rEFInd-minimal/icons/os_arch.png
+	volume   "Root"
+	loader   /boot.efi
+	options  "root=/dev/sda6 ro"  
+   }
+   ```
+ 
+### 16. Back to Arch
+  - Now, you can reboot on Mac and you will see the bootloader choose Arch.
+  > If you skip theming and don't see Arch in boot loader. Go back and undo the hide unused boot process and reboot again.
+  
+  - Log in with the username you created earlier then the password.
+  
+### To Be continued: Wifi, Keyboard backlight...
   

@@ -105,3 +105,23 @@ All the source will be listed at the end of the guide.
   passwd myusername
   pacman -S sudo
   ```
+  
+### 9. Grant sudo right
+  - open the sudoer file
+  ```
+  nano /etc/sudoers
+  ```
+  - uncomment this line `echo "%wheel ALL=(ALL) ALL"`
+  
+### 10. Set up locale
+  ```
+  nano /etc/locale.gen
+  ```
+	- Uncomment `en_US.UTF-8 UTF-8` and the line below
+  - Now generate locale file 
+  ```
+	locale-gen
+	echo LANG=en_US.UTF-8 > /etc/locale.conf
+	export LANG=en_US.UTF-8
+  ```
+  

@@ -14,7 +14,8 @@ All the source will be listed at the end of the guide.
   - Run `cgdisk /dev/sda` (if going to install somewhere else, it may not be /sda)
   - Delete the partition that is created for Arch from last step
   - Create new partition for Arch
-  > add 128MB between last apple partition and first Arch partition\n
+  > add 128MB between last apple partition and first Arch partition
+  
   > To do it, while creating first partition at the `first sector` part, calculate: 128*2048+(the value on the left inside the parenthesis)
   
   - List of partition that is needed:

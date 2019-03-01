@@ -14,10 +14,11 @@ All the source will be listed at the end of the guide.
   - Run `cgdisk /dev/sda` (if going to install somewhere else, it may not be /sda)
   - Delete the partition that is created for Arch from last step
   - Create new partition for Arch
-  > add 128MB between last apple partition and first Arch partition
-  > To do it, while creating first partition at the `first sector` part, calculate: 128*2048+(the value on the left inside parenthesis)
+  > add 128MB between last apple partition and first Arch partition\n
+  > To do it, while creating first partition at the `first sector` part, calculate: 128*2048+(the value on the left inside the parenthesis)
   
   - List of partition that is needed:
+  
   Dir | Size | Partition Type (Hex code) | Partition Name
   ----|------|---------------------------|---------------
   /dev/sda3 | 128MB | Apple HFS/HFS+ (af00) | Boot Loader
@@ -30,14 +31,14 @@ All the source will be listed at the end of the guide.
   > From now on, in this guide /sda4 and /sda6 refers to Boot and Root. Don't follow the same if you have different number for them.
   ```
   mkfs.ext4 /dev/sda4
-	mkfs.ext4 /dev/sda6
+  mkfs.ext4 /dev/sda6
   ```
   
 ### 5. Mount partitions and create swap
   - Create swap(/dev/sda5)
   ```
   mkswap /dev/sda5
-	swapon /dev/sda5
+  swapon /dev/sda5
   ```
   - Mount Root(/dev/sda6)
   ```
@@ -45,15 +46,15 @@ All the source will be listed at the end of the guide.
   ```
   - Create directory and mount Boot(/dev/sda4)
   ```
-	mkdir /mnt/boot
-	mount /dev/sda4 /mnt/boot
+  mkdir /mnt/boot
+  mount /dev/sda4 /mnt/boot
   ```
   - Create efi directory and mount EFI partition from apple(/dev/sda1)
   > go back and run `cgdisk` to check if not sure
   > efi will not be explained here, google it if interested
   ```
   mkdir /mnt/boot/efi
-	mount /dev/sda1 /mnt/boot/efi
+  mount /dev/sda1 /mnt/boot/efi
   ```
   
 ### 6. Installation
@@ -78,9 +79,9 @@ All the source will be listed at the end of the guide.
   - Modify fstab
   ```
   nano /mnt/etc/fstab
-	/dev/sda6  /      ext4  defaults,noatime,discard,data=writeback  0 1
-	/dev/sda5  /boot  ext4  defaults,relatime,stripe=4               0 2
-	/swap      none   swap  defaults                                 0 0
+  /dev/sda6  /      ext4  defaults,noatime,discard,data=writeback  0 1
+  /dev/sda5  /boot  ext4  defaults,relatime,stripe=4               0 2
+  /swap      none   swap  defaults                                 0 0
   ```
   
 ### 8. Configure system

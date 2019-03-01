@@ -67,7 +67,7 @@ All the source will be listed at the end of the guide.
   systemctl start dhcpcd
   ping -c 5 google.com
   ```
-  - After you make sure you have network, procede to the installation (add `vim` behind if you know how to use it):
+  - After you make sure you have network, proceed to the installation (add `vim` behind if you know how to use it):
   ```
   pacstrap /mnt base base-devel
   ```
@@ -162,7 +162,7 @@ All the source will be listed at the end of the guide.
   
   > Nonetheless, it works fine.
   
-  - Generate `boot.efi` and current directory
+  - Generate `boot.efi` to the current directory but we need it in `root`
   > remember to `cd` all the way back to `root`, neccessary for rEFInd to work
   ```
   grub-mkstandalone -o boot.efi -d usr/lib/grub/x86_64-efi -O x86_64-efi --compress=xz boot/grub/grub.cfg

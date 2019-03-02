@@ -2,9 +2,8 @@
 
 This is a guide for Dual Booting Arch Linux on MacOS. All the information are gathered through other guides and digging in google.
 All the source will be listed at the end of the guide.
-
-### Steps overview
 ---
+## Steps overview
   1. [ Create bootable USB ](#1)
   2. [ Disk partition on Mac ](#2)
   3. [ Partition for Arch linux ](#3)
@@ -21,23 +20,20 @@ All the source will be listed at the end of the guide.
   14. [ Back to Mac configuration ](#14)
   15. [ Install rEFInd ](#15)
   16. [ Back to Arch ](#16)
-  
+---  
 <a name="1"></a>
-### 1. Create [bootable USB](https://wiki.archlinux.org/index.php/USB_flash_installation_media) with Arch ISO
----
+## 1. Create [bootable USB](https://wiki.archlinux.org/index.php/USB_flash_installation_media) with Arch ISO
   - head to link for details
-
-<a name="2"></a>
-### 2. Disk partition on Mac
 ---
+<a name="2"></a>
+## 2. Disk partition on Mac
   - Open `Disk Utility` on Mac
   - Select the drive to be partitioned in the left-hand column (not the partitions!). Click on the Partition button
   - Add a new partition by pressing the + button and choose how much space you want to leave for OS X, and how much for the new partition. Keep in mind the new partition will be formatted in Arch Linux, so you can choose any partition type you want
   - Boot the Arch installation media by holding down the Alt during boot
-  
+---  
 <a name="3"></a>
-### 3. Partition for Arch linux
----
+## 3. Partition for Arch linux
   - Run `cgdisk /dev/sda` (if going to install somewhere else, it may not be /sda)
   - Delete the partition that is created for Arch from last step
   - Create new partition for Arch
@@ -53,20 +49,18 @@ All the source will be listed at the end of the guide.
   /dev/sda4 | 256MB | Linux filesystem  (8300) | Boot
   /dev/sda5 | Twice of RAM | Linux Swap  (8200) | Swap
   /dev/sda6 | Rest of space | Linux filesystem  (8300) | Root
-  
+---  
 <a name="4"></a>
-### 4. Format Partition
----
+## 4. Format Partition
   - Format the Boot and Root partition with ext4
   > From now on, in this guide /sda4 and /sda6 refers to Boot and Root. Don't follow the same if you have different number for them.
   ```
   mkfs.ext4 /dev/sda4
   mkfs.ext4 /dev/sda6
   ```
-
-<a name="5"></a>
-### 5. Mount partitions and create swap
 ---
+<a name="5"></a>
+## 5. Mount partitions and create swap
   - Create swap(/dev/sda5)
   ```
   mkswap /dev/sda5
@@ -89,10 +83,9 @@ All the source will be listed at the end of the guide.
   mkdir /mnt/boot/efi
   mount /dev/sda1 /mnt/boot/efi
   ```
-  
+---  
 <a name="6"></a> 
-### 6. Installation
----
+## 6. Installation
   - This part requires internet connection. Options:
     * Tethered phone via USB ([Android](https://wiki.archlinux.org/index.php/Android_tethering), [IOS](https://wiki.archlinux.org/index.php/IPhone_tethering))
     * Wired (ethernet adapter)
@@ -105,10 +98,9 @@ All the source will be listed at the end of the guide.
   ```
   pacstrap /mnt base base-devel
   ```
-  
+---  
 <a name="7"></a>
-### 7. Optimize fstab for SSD, add swap
----
+## 7. Optimize fstab for SSD, add swap
   - Generate fstab file (important not to mess with partition after generating this file, may cause slow bootup, if happened update uuid  which can be check with `blkid`)
   ```
   genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -120,10 +112,9 @@ All the source will be listed at the end of the guide.
   /dev/sda5  /boot  ext4  defaults,relatime,stripe=4               0 2
   /swap      none   swap  defaults                                 0 0
   ```
-  
+---  
 <a name="8"></a>  
-### 8. Configure system
----
+## 8. Configure system
   - input the name you want when you see `myhostname` and `myusername`
   ```
   arch-chroot /mnt /bin/bash
@@ -143,19 +134,17 @@ All the source will be listed at the end of the guide.
   passwd myusername
   pacman -S sudo
   ```
- 
+--- 
 <a name="9"></a>
-### 9. Grant sudo right
----
+## 9. Grant sudo right
   - Open the sudoer file
   ```
   nano /etc/sudoers
   ```
   - uncomment this line `echo "%wheel ALL=(ALL) ALL"`
-  
+---  
 <a name="10"></a>
-### 10. Set up locale
----
+## 10. Set up locale
   ```
   nano /etc/locale.gen
   ```
@@ -166,10 +155,9 @@ All the source will be listed at the end of the guide.
   echo LANG=en_US.UTF-8 > /etc/locale.conf
   export LANG=en_US.UTF-8
   ```
-  
+---  
 <a name="11"></a>
-### 11. Set up mkinitcpio hooks and run
----
+## 11. Set up mkinitcpio hooks and run
   - Insert `keyboard` after `autodetect`, but usually it is there already
   ```
   nano /etc/mkinitcpio.conf 
@@ -178,10 +166,9 @@ All the source will be listed at the end of the guide.
   ```
   mkinitcpio -p linux
   ```
-  
+---  
 <a name="12"></a>
-### 12. Set up GRUB/EFI
----
+## 12. Set up GRUB/EFI
   - Install GRUB
   ```
   pacman -S grub-efi-x86_64
@@ -202,10 +189,9 @@ All the source will be listed at the end of the guide.
   ```
   grub-mkconfig -o boot/grub/grub.cfg
   ```
-  
+---  
 <a name="13"></a>
-### 13. Create boot.efi
----
+## 13. Create boot.efi
   > Warning: This guide will use rEFInd to perform dual boot and use an unofficial way to configure it
   
   > Nonetheless, it works fine. :)
@@ -216,10 +202,9 @@ All the source will be listed at the end of the guide.
   grub-mkstandalone -o boot.efi -d usr/lib/grub/x86_64-efi -O x86_64-efi --compress=xz boot/grub/grub.cfg
   ```
   > If you decide use apple boot loader, go to source and head to other guides
-  
+---  
 <a name="14"></a>
-### 14. Back to Mac configuration
----
+## 14. Back to Mac configuration
   - Head back to MacOS
   ```
   exit
@@ -258,10 +243,9 @@ All the source will be listed at the end of the guide.
   </dict>
   </plist>
   ```
-  
+---  
 <a name="15"></a>
-### 15. Install rEFInd
----
+## 15. Install rEFInd
   - Download [rEFInd](www.rodsbooks.com/refind/) on your Mac
   - Go to "Getting rEFInd" ->  "A binary zip file"
   - Open Terminal
@@ -300,10 +284,9 @@ All the source will be listed at the end of the guide.
 	options  "root=/dev/sda6 ro"  
    }
    ```
- 
+ ---
 <a name="16"></a>
-### 16. Back to Arch
----
+## 16. Back to Arch
   - Now, you can reboot on Mac and you will see the rEFInd bootloader then choose Arch.
   > If you skip theming and don't see Arch in boot loader (Since we manually detect arch during the theming section). Go back and undo the hide unused boot process and reboot again.
   

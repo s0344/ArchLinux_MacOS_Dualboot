@@ -19,9 +19,9 @@ All the source will be listed at the end of the guide.
   11. [ Set up mkinitcpio hooks and run ](#11)
   12. [ Set up GRUB/EFI ](#12)
   13. [ Create boot.efi ](#13)
-  14. [ Back to Mac configuration ](#14)
+  14. [ Back to Mac - Configuration ](#14)
   15. [ Install rEFInd ](#15)
-  16. [ Back to Arch ](#16)
+  16. [ Back to Arch - Post installation ](#16)
 ---  
 <a name="1"></a>
 ## 1. Create [bootable USB](https://wiki.archlinux.org/index.php/USB_flash_installation_media) with Arch ISO
@@ -206,7 +206,7 @@ All the source will be listed at the end of the guide.
   > If you decide use apple boot loader, go to source and head to other guides
 ---  
 <a name="14"></a>
-## 14. Back to Mac configuration
+## 14. Back to Mac - Configuration
   - Head back to MacOS
   ```
   exit
@@ -288,7 +288,7 @@ All the source will be listed at the end of the guide.
    ```
  ---
 <a name="16"></a>
-## 16. Back to Arch
+## 16. Back to Arch - Post installation
   - Now, you can reboot on Mac and you will see the rEFInd bootloader then choose Arch.
   > If you skip theming and don't see Arch in boot loader (Since we manually detect arch during the theming section). Go back and undo the hide unused boot process and reboot again.
   

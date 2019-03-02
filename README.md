@@ -278,7 +278,7 @@ All the source will be listed at the end of the guide.
    > Remember don't use /sda6 if you have different number for root
    ```
    menuentry "Arch Linux"{
-     icon /EFI/refind/themes/rEFInd-minimal/icons/os_arch.png
+    icon /EFI/refind/themes/rEFInd-minimal/icons/os_arch.png
 	volume   "Root"
 	loader   /boot.efi
 	options  "root=/dev/sda6 ro"  

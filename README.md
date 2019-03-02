@@ -4,7 +4,7 @@ This is a guide for Dual Booting Arch Linux on MacOS. All the information are ga
 All the source will be listed at the end of the guide.
 
 ### 0. Testing header
-  - [4. Format Partition](# 4. Format Partition)
+  1. [ Description. ](#desc)
 
 ### 1. Create [bootable USB](https://wiki.archlinux.org/index.php/USB_flash_installation_media) with Arch ISO
 ### 2. Disk partition on Mac
@@ -12,7 +12,8 @@ All the source will be listed at the end of the guide.
   - Select the drive to be partitioned in the left-hand column (not the partitions!). Click on the Partition button
   - Add a new partition by pressing the + button and choose how much space you want to leave for OS X, and how much for the new partition. Keep in mind the new partition will be formatted in Arch Linux, so you can choose any partition type you want
   - Boot the Arch installation media by holding down the Alt during boot
-
+  
+<a name="desc"></a>
 ### 3. Partition for Arch linux
   - Run `cgdisk /dev/sda` (if going to install somewhere else, it may not be /sda)
   - Delete the partition that is created for Arch from last step

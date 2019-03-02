@@ -51,8 +51,9 @@ All the source will be listed at the end of the guide.
   mount /dev/sda4 /mnt/boot
   ```
   - Create efi directory and mount EFI partition from apple(/dev/sda1)
-  > go back and run `cgdisk` to check if not sure
-  > efi will not be explained here, google it if interested
+  > Go back and run `cgdisk` to check if not sure
+  
+  > EFI will not be explained here, google it if interested
   ```
   mkdir /mnt/boot/efi
   mount /dev/sda1 /mnt/boot/efi
@@ -93,13 +94,13 @@ All the source will be listed at the end of the guide.
   echo myhostname > /etc/hostname
   ```
   - May need to remove localtime with `rm` if it already exit
-  > Utilize *Tab* function to find your place
+  > Utilize *Tab* key to find your place
   ```
-  ln -s /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+  ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
   hwclock --systohc --utc
   ```
   - Add new user and download sudo
-  > if sudo is already downloaded, please ignore
+  > If sudo is already downloaded, please ignore
   ```
   useradd -m -g users -G wheel -s /bin/bash myusername
   passwd myusername
@@ -107,7 +108,7 @@ All the source will be listed at the end of the guide.
   ```
   
 ### 9. Grant sudo right
-  - open the sudoer file
+  - Open the sudoer file
   ```
   nano /etc/sudoers
   ```
@@ -120,13 +121,13 @@ All the source will be listed at the end of the guide.
   - Uncomment `en_US.UTF-8 UTF-8` and the line below
   - Now generate locale file 
   ```
-	locale-gen
-	echo LANG=en_US.UTF-8 > /etc/locale.conf
-	export LANG=en_US.UTF-8
+  locale-gen
+  echo LANG=en_US.UTF-8 > /etc/locale.conf
+  export LANG=en_US.UTF-8
   ```
   
 ### 11. Set up mkinitcpio hooks and run
-  - Insert `keyboard` after `autodetct`, but usually it is there already
+  - Insert `keyboard` after `autodetect`, but usually it is there already
   ```
   nano /etc/mkinitcpio.conf 
   ```
@@ -147,7 +148,7 @@ All the source will be listed at the end of the guide.
   nano /etc/default/grub
   ```
   - Find and modify this line `GRUB_CMDLINE_LINUX_DEFAULT="quiet rootflags=data=writeback libata.force=1:noncq"`
-  - Add this to the end of file
+  - Add the following to the end of file
   ```
   # fix broken grub.cfg gen
   GRUB_DISABLE_SUBMENU=y
@@ -160,9 +161,9 @@ All the source will be listed at the end of the guide.
 ### 13. Create boot.efi
   > Warning: This guide will use rEFInd to perform dual boot and use an unofficial way to configure it
   
-  > Nonetheless, it works fine.
+  > Nonetheless, it works fine. :)
   
-  - Generate `boot.efi` to the current directory but we need it in `root`
+  - Generate `boot.efi` to the current directory but we *need* it in `root`
   > remember to `cd` all the way back to `root`, neccessary for rEFInd to work
   ```
   grub-mkstandalone -o boot.efi -d usr/lib/grub/x86_64-efi -O x86_64-efi --compress=xz boot/grub/grub.cfg
@@ -179,7 +180,7 @@ All the source will be listed at the end of the guide.
   - Launch Disk Utility
   - Format (“Erase”) /dev/sda3 using Mac journaled filesystem (The Boot Loader partition that you created in the beginning)
   - Create boot file structure
-  > Same as before, disk0sX should be what number you have showing in MacOS
+  > Same as before, disk0sX should be what number you have in MacOS
   ```
   cd /Volumes/disk0s3
   mkdir System mach_kernel
@@ -220,11 +221,12 @@ All the source will be listed at the end of the guide.
   sudo ./mountesp
   ```
   - After `mountesp`, you will see ESP show up as a drive. Open it, go to /EFI/refind/. Open `refind.conf` with `textedit`
-  - Uncomment the lines `scan_all_linux_kernels` and `also_scan_dirs`
+  - Uncomment these lines: `scan_all_linux_kernels` and `also_scan_dirs`
   - Hide unused boot options:
   	- Find `dont_scan_volume` add `"Preboot","Root"`
 	- Find `dont_scan_dir` add `EFI/GRUB`
 	> Actually, it depends on what you see during reboot and configure what you don't want to see here
+	
   *Optional: Change theme:*
    - [Official website](http://www.rodsbooks.com/refind/themes.html) for theming rEFInd
    - This guide will use [Minimal theme](https://github.com/EvanPurkhiser/rEFInd-minimal)
@@ -241,7 +243,7 @@ All the source will be listed at the end of the guide.
    > Remember don't use /sda6 if you have different number for root
    ```
    menuentry "Arch Linux"{
-   	icon /EFI/refind/themes/rEFInd-minimal/icons/os_arch.png
+   icon /EFI/refind/themes/rEFInd-minimal/icons/os_arch.png
 	volume   "Root"
 	loader   /boot.efi
 	options  "root=/dev/sda6 ro"  
@@ -249,8 +251,8 @@ All the source will be listed at the end of the guide.
    ```
  
 ### 16. Back to Arch
-  - Now, you can reboot on Mac and you will see the bootloader choose Arch.
-  > If you skip theming and don't see Arch in boot loader. Go back and undo the hide unused boot process and reboot again.
+  - Now, you can reboot on Mac and you will see the rEFInd bootloader then choose Arch.
+  > If you skip theming and don't see Arch in boot loader (Since we manually detect arch during the theming section). Go back and undo the hide unused boot process and reboot again.
   
   - Log in with the username you created earlier then the password.
   

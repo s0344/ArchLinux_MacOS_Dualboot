@@ -163,7 +163,7 @@ All the source will be listed at the end of the guide.
   
   > Nonetheless, it works fine. :)
   
-  - Generate `boot.efi` to the current directory but we *need* it in `root`
+  - Generate `boot.efi` to the current directory but we **need** it in `root`
   > remember to `cd` all the way back to `root`, neccessary for rEFInd to work
   ```
   grub-mkstandalone -o boot.efi -d usr/lib/grub/x86_64-efi -O x86_64-efi --compress=xz boot/grub/grub.cfg

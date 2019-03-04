@@ -56,7 +56,7 @@ All the source will be listed at the end of the guide.
 ## 4. Format Partition
   - Format the Boot and Root partition with ext4
   > From now on, in this guide /sda4 and /sda6 refers to Boot and Root. Don't follow the same if you have different number for them.
-  ```
+  ```bash
   mkfs.ext4 /dev/sda4
   mkfs.ext4 /dev/sda6
   ```

@@ -64,7 +64,7 @@ All the source will be listed at the end of the guide.
 <a name="5"></a>
 ## 5. Mount partitions and create swap
   - Create swap(/dev/sda5)
-  ```
+  ```bash
   mkswap /dev/sda5
   swapon /dev/sda5
   ```
@@ -73,7 +73,7 @@ All the source will be listed at the end of the guide.
   mount /dev/sda6 /mnt 
   ```
   - Create directory and mount Boot(/dev/sda4)
-  ```
+  ```bash
   mkdir /mnt/boot
   mount /dev/sda4 /mnt/boot
   ```
@@ -92,23 +92,23 @@ All the source will be listed at the end of the guide.
     * Tethered phone via USB ([Android](https://wiki.archlinux.org/index.php/Android_tethering), [IOS](https://wiki.archlinux.org/index.php/IPhone_tethering))
     * Wired (ethernet adapter)
   - Check if you get internet
-  ```
+  ```bash
   systemctl start dhcpcd
   ping -c 5 google.com
   ```
   - After you make sure you have network, proceed to the installation (add `vim` behind if you know how to use it):
-  ```
+  ```bash
   pacstrap /mnt base base-devel
   ```
 ---  
 <a name="7"></a>
 ## 7. Optimize fstab for SSD, add swap
   - Generate fstab file (important not to mess with partition after generating this file, may cause slow bootup, if happened update uuid  which can be check with `blkid`)
-  ```
+  ```bash
   genfstab -U -p /mnt >> /mnt/etc/fstab
   ```
   - Modify fstab
-  ```
+  ```bash
   nano /mnt/etc/fstab
   /dev/sda6  /      ext4  defaults,noatime,discard,data=writeback  0 1
   /dev/sda5  /boot  ext4  defaults,relatime,stripe=4               0 2
@@ -118,20 +118,20 @@ All the source will be listed at the end of the guide.
 <a name="8"></a>  
 ## 8. Configure system
   - input the name you want when you see `myhostname` and `myusername`
-  ```
+  ```bash
   arch-chroot /mnt /bin/bash
   passwd
   echo myhostname > /etc/hostname
   ```
   - May need to remove localtime with `rm` if it already exit
   > Utilize *Tab* key to find your place
-  ```
+  ```bash
   ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
   hwclock --systohc --utc
   ```
   - Add new user and download sudo
   > If sudo is already downloaded, please ignore
-  ```
+  ```bash
   useradd -m -g users -G wheel -s /bin/bash myusername
   passwd myusername
   pacman -S sudo
@@ -140,19 +140,19 @@ All the source will be listed at the end of the guide.
 <a name="9"></a>
 ## 9. Grant sudo right
   - Open the sudoer file
-  ```
+  ```bash
   nano /etc/sudoers
   ```
   - uncomment this line `echo "%wheel ALL=(ALL) ALL"`
 ---  
 <a name="10"></a>
 ## 10. Set up locale
-  ```
+  ```bash
   nano /etc/locale.gen
   ```
   - Uncomment `en_US.UTF-8 UTF-8` and the line below
   - Now generate locale file 
-  ```
+  ```bash
   locale-gen
   echo LANG=en_US.UTF-8 > /etc/locale.conf
   export LANG=en_US.UTF-8
@@ -161,34 +161,34 @@ All the source will be listed at the end of the guide.
 <a name="11"></a>
 ## 11. Set up mkinitcpio hooks and run
   - Insert `keyboard` after `autodetect`, but usually it is there already
-  ```
+  ```bash
   nano /etc/mkinitcpio.conf 
   ```
   - Run it
-  ```
+  ```bash
   mkinitcpio -p linux
   ```
 ---  
 <a name="12"></a>
 ## 12. Set up GRUB/EFI
   - Install GRUB
-  ```
+  ```bash
   pacman -S grub-efi-x86_64
   pacman -S efibootmgr
   grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
   ```
   - Configure and generate `grub.cfg`
-  ```
+  ```bash
   nano /etc/default/grub
   ```
   - Find and modify this line `GRUB_CMDLINE_LINUX_DEFAULT="quiet rootflags=data=writeback libata.force=1:noncq"`
   - Add the following to the end of file
-  ```
+  ```bash
   # fix broken grub.cfg gen
   GRUB_DISABLE_SUBMENU=y
   ```
   - Generate `grub.cfg`
-  ```
+  ```bash
   grub-mkconfig -o boot/grub/grub.cfg
   ```
 ---  
@@ -200,7 +200,7 @@ All the source will be listed at the end of the guide.
   
   - Generate `boot.efi` to the current directory but we **need** it in `root`
   > remember to `cd` all the way back to `root`, neccessary for rEFInd to work
-  ```
+  ```bash
   grub-mkstandalone -o boot.efi -d usr/lib/grub/x86_64-efi -O x86_64-efi --compress=xz boot/grub/grub.cfg
   ```
   > If you decide use apple boot loader, go to source and head to other guides
@@ -208,7 +208,7 @@ All the source will be listed at the end of the guide.
 <a name="14"></a>
 ## 14. Back to Mac - Configuration
   - Head back to MacOS
-  ```
+  ```bash
   exit
   reboot
   ```
@@ -217,7 +217,7 @@ All the source will be listed at the end of the guide.
   - Format (“Erase”) /dev/sda3 using Mac journaled filesystem (The Boot Loader partition that you created in the beginning)
   - Create boot file structure
   > Same as before, disk0sX should be what number you have in MacOS
-  ```
+  ```bash
   cd /Volumes/disk0s3
   mkdir System mach_kernel
   cd System
@@ -228,7 +228,7 @@ All the source will be listed at the end of the guide.
   touch SystemVersion.plist
   ```
   - Open that file
-  ```
+  ```bash
   nano SystemVersion.plist
   ```
   - Copy this configuration
@@ -253,7 +253,7 @@ All the source will be listed at the end of the guide.
   - Open Terminal
   - `cd` into `Downloads`
   - Run `refind-install` and `mountesp`
-  ```
+  ```bash
   sudo ./refind-install
   sudo ./mountesp
   ```

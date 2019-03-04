@@ -69,7 +69,7 @@ All the source will be listed at the end of the guide.
   swapon /dev/sda5
   ```
   - Mount Root(/dev/sda6)
-  ```
+  ```bash
   mount /dev/sda6 /mnt 
   ```
   - Create directory and mount Boot(/dev/sda4)

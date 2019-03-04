@@ -81,7 +81,7 @@ All the source will be listed at the end of the guide.
   > Go back and run `cgdisk` to check if not sure
   
   > EFI will not be explained here, google it if interested
-  ```
+  ```bash
   mkdir /mnt/boot/efi
   mount /dev/sda1 /mnt/boot/efi
   ```

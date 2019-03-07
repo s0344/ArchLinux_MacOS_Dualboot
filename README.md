@@ -22,6 +22,7 @@ All the source will be listed at the end of the guide.
   14. [ Back to Mac - Configuration ](#14)
   15. [ Install rEFInd ](#15)
   16. [ Back to Arch - Post installation ](#16)
+  16. [ Wireless setup ](#17)
 ---  
 <a name="1"></a>
 ## 1. Create [bootable USB](https://wiki.archlinux.org/index.php/USB_flash_installation_media) with Arch ISO
@@ -36,6 +37,7 @@ All the source will be listed at the end of the guide.
 ---  
 <a name="3"></a>
 ## 3. Partition for Arch linux
+  - Use `lsblk` to check the name of your drive
   - Run `cgdisk /dev/sda` (if going to install somewhere else, it may not be /sda)
   - Delete the partition that is created for Arch from last step
   - Create new partition for Arch
@@ -143,7 +145,7 @@ All the source will be listed at the end of the guide.
   ```bash
   nano /etc/sudoers
   ```
-  - uncomment this line `echo "%wheel ALL=(ALL) ALL"`
+  - uncomment this line `"%wheel ALL=(ALL) ALL"`
 ---  
 <a name="10"></a>
 ## 10. Set up locale
@@ -293,6 +295,34 @@ All the source will be listed at the end of the guide.
   > If you skip theming and don't see Arch in boot loader (Since we manually detect arch during the theming section). Go back and undo the hide unused boot process and reboot again.
   
   - Log in with the username you created earlier then the password.
+
+<a name="17"></a>
+## 17. Wireless setup
+  - Make sure you have ethernet access or others
+  - get the name of the interface
+  ```
+  ip link
+  ```
+  - get internet access (in this case ethernet)
+  ```
+  sudo systemctl start dhcpcd@enp0s25
+  ```
+  - install drivers then reboot
+  ```bash
+  pacman -S linux-headers dkms broadcom-wl-dkms iw dialog wpa_supplicant
+  reboot
+  ```
+  - You can connect wifi everytime wifi the following command
+  ```
+  sudo wifi-menu
+  ```
+  ---
+<a name="18"></a>
+## 18. Keyboard backlight
+  - change the value to "40"
+  ```bash
+  sudo nano /sys/devices/platform/applesmc.768/leds/smc\:\:kbd_backlight/brightness
+  ```
   
-### To Be continued: Wifi, Keyboard backlight...
+### To Be continued: audio...
   

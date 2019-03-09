@@ -2,6 +2,8 @@
 
 This is a guide for Dual Booting Arch Linux on MacOS. All the information are gathered through other guides and digging in google.
 
+The mac I am using is MacBook Air (early 2015) and should be working on other versions too.
+
 All the source will be listed at the end of the guide.
 
 ---

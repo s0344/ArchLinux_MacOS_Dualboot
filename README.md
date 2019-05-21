@@ -24,11 +24,20 @@ All the source will be listed at the end of the guide.
   14. [ Back to Mac - Configuration ](#14)
   15. [ Install rEFInd ](#15)
   16. [ Back to Arch - Post installation ](#16)
-  16. [ Wireless setup ](#17)
+  17. [ Wireless setup ](#17)
+  18. [ Keyboard backlight ](#18)
+  19. [ Battery Performance ](#19)
+  20. [ Thermal Management ](#20)
+  21. [ Fan Control ](#21)
+  22. [ Trackpad ](#22)
+  23. [ Function keys ](#23)
+  24. [ Other post installation stuff ](#24)
+  25. [ Useful applications ](#25)
+  26. [ Source ](#26)
 ---  
 <a name="1"></a>
 ## 1. Create [bootable USB](https://wiki.archlinux.org/index.php/USB_flash_installation_media) with Arch ISO
-  - head to link for details
+  - Head to link for details
 ---
 <a name="2"></a>
 ## 2. Disk partition on Mac
@@ -43,7 +52,7 @@ All the source will be listed at the end of the guide.
   - Run `cgdisk /dev/sda` (if going to install somewhere else, it may not be /sda)
   - Delete the partition that is created for Arch from last step
   - Create new partition for Arch
-  > add 128MB between last apple partition and first Arch partition
+  > Add 128MB between last apple partition and first Arch partition
   
   > To do it, while creating first partition at the `first sector` part, calculate: 128*2048+(the value on the left inside the parenthesis)
   
@@ -121,7 +130,7 @@ All the source will be listed at the end of the guide.
 ---  
 <a name="8"></a>  
 ## 8. Configure system
-  - input the name you want when you see `myhostname` and `myusername`
+  - Input the name you want when you see `myhostname` and `myusername`
   ```bash
   arch-chroot /mnt /bin/bash
   passwd
@@ -147,7 +156,7 @@ All the source will be listed at the end of the guide.
   ```bash
   nano /etc/sudoers
   ```
-  - uncomment this line `"%wheel ALL=(ALL) ALL"`
+  - Uncomment this line `"%wheel ALL=(ALL) ALL"`
 ---  
 <a name="10"></a>
 ## 10. Set up locale
@@ -203,7 +212,7 @@ All the source will be listed at the end of the guide.
   > Nonetheless, it works fine. :)
   
   - Generate `boot.efi` to the current directory but we **need** it in `root`
-  > remember to `cd` all the way back to `root`, neccessary for rEFInd to work
+  > Remember to `cd` all the way back to `root`, neccessary for rEFInd to work
   ```bash
   grub-mkstandalone -o boot.efi -d usr/lib/grub/x86_64-efi -O x86_64-efi --compress=xz boot/grub/grub.cfg
   ```
@@ -297,15 +306,15 @@ All the source will be listed at the end of the guide.
   > If you skip theming and don't see Arch in boot loader (Since we manually detect arch during the theming section). Go back and undo the hide unused boot process and reboot again.
   
   - Log in with the username you created earlier then the password.
-
+ ---
 <a name="17"></a>
 ## 17. Wireless setup
   - Make sure you have ethernet access or others
-  - get the name of the interface
+  - Get the name of the interface
   ```
   ip link
   ```
-  - get internet access (in this case ethernet)
+  - Get internet access (in this case ethernet)
   ```
   sudo systemctl start dhcpcd@enp0s25
   ```
@@ -318,13 +327,257 @@ All the source will be listed at the end of the guide.
   ```
   sudo wifi-menu
   ```
-  ---
+ ---
 <a name="18"></a>
 ## 18. Keyboard backlight
-  - change the value to "40"
+  - Change the value to "40"
   ```bash
   sudo nano /sys/devices/platform/applesmc.768/leds/smc\:\:kbd_backlight/brightness
   ```
+ ---
+<a name="19"></a>
+## 19. Battery Performance
+  - PowerTOP: a tool provided by Intel to enable various powersaving modes in userspace, kernel and hardware, available in the official repositories.
+  ```bash
+  sudo pacman -S powertop
+  ```
+  - You may want to put your laptop on battery power and calibrate powertop
+  ```bash
+  powertop --calibrate
+  ```
+  - You can create a systemd service that will start powertop’s autotune settings on startup.
+  - First, go to the `.service` file
+  ```bash
+   /etc/systemd/system/powertop.service
+  ```
+  - Apply the following
+  ```bash
+  [Unit]
+  Description=Powertop tunings
+
+  [Service]
+  Type=oneshot
+  ExecStart=/usr/bin/powertop --auto-tune
   
-### To Be continued: audio...
+  [Install]
+  WantedBy=multi-user.target
+  And enable it to automatically start at boot time:
+  ```
+  - Enable service on startup
+  ```bash
+  systemctl enable powertop.service
+  ```
+ ---
+<a name="20"></a>
+## 20. Thermal Management
+  - You can do much to save power now. THe most important parts are that you install “thermald” and “cpupower”.
+  - Thermald: Thermald is a deamon regulating the CPU speed, when your CPU runs too hot.
+  ```bash
+  sudo pacman -S thermald
+  sudo systemctl enable thermald
+  sudo systemctl start thermald
+  ```
+  - CPUPower: CPUPower can set the governor of your CPU clock speed. So it can set your Intel CPU to powersave mode, which saves a lot energy.
+  ```bash
+  sudo pacman -S cpupower
+  sudo systemctl enable cpupower
+  sudo systemctl start cpupower
+  ```
+  - Set governor to powersave mode
+  ```bash
+  cpupower frequency-set -g powersave
+  ```
+ ---
+<a name="21"></a>
+## 21. Fan Control
+  - Standard way of doing it
+  ```bash
+  sudo pacman -S mbpfan-git
+  sudo systemctl mbpfan.service
+  ```
+  - Since this doesn't work on my device, I spent some time an found another way to do it. (less efficient)
+  - I found the standard way is a enhanced version of [this](http://allanmcrae.com/2011/08/mbp-fan-daemon-update/). However, I download this and it doesn't work. At the end, I manually put the `.c` file under `/usr/bin/`, run a command to build, and write a service file for it to run on startup.
+  - First download that file in link and unzip it
+  ```bash
+  tar xvf mbpfan-1.1-1.src.tar.gz
+  ```
+  - Use `cp` command to copy file to this directory `/usr/bin/`
+  ```bash
+  cp filename directory
+  ```
+  - Modify the values in the file.
+  > Change fan speed: For my device, the lowest and highest is 1200 and 6500. (check sys file, google it for more details)
+  > Change temperature thersholds: I set it as 50,60,70 because I like it to be lower
+  > Change polling interval: I set it to 1 so it will be more responsive
+  > Change `get_temp` function since the directory is wrong (for me)
+  ```c
+  unsigned short get_temp()
+  {
+	  FILE *file;
+	  unsigned short temp;
+	  unsigned int t0;
+
+	  file=fopen("/sys/class/thermal/thermal_zone0/hwmon1/temp1_input","r");
+	  fscanf(file, "%d", &t0);
+	  fclose(file);
+
+	  temp = (unsigned short)(ceil((float)(t0)/1000.));
+	  return temp;
+  }
+  ```
+  - After all the modifications, run this to build
+  ```bash
+  gcc -o mbpfan -lm -Wall $CFLAGS $LDFLAGS mbpfan.c
+  ```
+  - You can test it now by running the command `mbpfan` in command line
+  > remember to stress the machine to see if the fan kicks in
   
+  - Set `.service` file for startup
+  - Create a `mbpfan.service` file under `/etc/systemd/system/` then copy this
+  > Fun fact: `sys` file is virtual. What I mean is it always make a new one on every startup. And since the driver need to modify fan speed value which is located under `sys`, we set the driver to enable after `sys` is created.
+  ```bash
+  [Unit]
+  Description=Fan Control for Macbook
+  After=syslog.target
+  After=remote-fs.target
+  
+  [Service]
+  User=root
+  Type=forking
+  Restart=always
+  ExecStart=/usr/bin/mbpfan
+  
+  [Install]
+  WantedBy=multi-user.target
+  ```
+  - Enable it and restart
+  ```bash
+  sudo systemctl enable mbpfan.service
+  restart
+  ```
+  - Use `list-unit` and find `mbpfan.service` to check if it is running
+  ```bash
+  sudo systemctl list-unit
+  ```
+ ---
+<a name="22"></a>
+## 22. Trackpad
+  - Install xf86-input-synaptics
+  ```bash
+  sudo pacman -S xf86-input-synaptics
+  ```
+  - Configure `/etc/X11/xorg.conf.d/50-synaptics.conf`
+  ```bash
+  Section "InputClass"
+    MatchIsTouchpad "on"
+    Identifier      "touchpad catchall"
+    Driver          "synaptics"
+    # 1 = left, 2 = right, 3 = middle
+    Option          "TapButton1" "1"  
+    Option          "TapButton2" "3"
+    Option          "TapButton3" "2"
+    # Palm detection
+    Option          "PalmDetect" "1"
+    # Horizontal scrolling
+    Option "HorizTwoFingerScroll" "1"
+    # Natural Scrolling (and speed)
+    Option "VertScrollDelta" "-100"
+    Option "HorizScrollDelta" "-100"
+  EndSection
+  ```
+ ---
+<a name="23"></a>
+## 23. Function keys
+  - If your F<num> keys do not work, this is probably because the kernel driver for the keyboard has defaulted to using the media keys and requiring you to use the Fn key to get to the F<num> keys. To change the behavior temporarily, append 2 to `/sys/module/hid_apple/parameters/fnmode`.
+  ```bash
+  echo 2 > /sys/module/hid_apple/parameters/fnmode
+  ```
+  - To make the change permanent, set the hid_apple fnmode option to 2:
+  ```bash
+  /etc/modprobe.d/hid_apple.conf
+  options hid_apple fnmode=2
+  ```
+  - To apply the change to your initial ramdisk, in your mkinitcpio configuration (usually `/etc/mkinitcpio.conf`), make sure you either have `modconf` included in the `HOOKS` variable or `/etc/modprobe.d/hid_apple.conf` in the FILES variable. You would then need to regenerate the initramfs.
+	
+ ---
+<a name="24"></a>
+## 24. Other post installation stuff
+  - For more post installation stuff, go to this [link](https://medium.com/@philpl/arch-linux-running-on-my-macbook-2ea525ebefe3) starting from topic `Fixing lid closing to suspend` 
+ ---
+<a name="25"></a>
+## 25. Useful applications
+  - This is a list of applications, just install it with `pacman` or `yay`
+  - Fonts
+  > ttf-inconsolata
+  
+  > ttf-liberation
+  
+  > noto-fonts
+  - File utilities
+  > p7zip
+  
+  > unrar
+  - Helpful stuff
+  > multilib-devel
+  
+  > wget
+  
+  > git
+  
+  > ranger
+  - Install xorg server for screen
+  > xorg-server
+  
+  > xorg-xinit
+  - GPU driver
+  > Intel: xf86-video-intel
+  
+  > Nvidia: xf86-video-nvidia
+  - GUI program
+  > dolphin(another ranger)
+  
+  > firefox/chromium
+  
+  > kate(textediter)
+  
+  > feh(background)
+  - i3
+  > i3
+  
+  > konsole(urxvt-unicode)
+  
+  > dmenu
+  ```bash
+  echo exec i3 >> ~/.xinitrc
+  ```
+  - Sound
+  > pulseaudio
+  
+  > pavucontrol
+  
+  > pulseaudio-alsa
+  
+  > alsa-utils
+  
+  > Unmute master channel
+  ```bash
+  amixer sset Master unmute
+  ```
+  - Yay (another pacman)
+  > git clone <yay git site>
+  ```bash
+  makepkg -sri
+  ```
+	
+ ---
+<a name="26"></a>
+## 26. Source
+  - https://wiki.archlinux.org/index.php/Mac#Installation
+  - http://panks.me/posts/2013/06/arch-linux-installation-with-os-x-on-macbook-air-dual-boot/
+  - https://github.com/pandeiro/arch-on-air
+  - https://wiki.archlinux.org/index.php/GRUB#Installation_2  (for GRUB command)
+  - https://www.youtube.com/watch?v=OyZVhosCwBM
+  - https://bbs.archlinux.org/viewtopic.php?id=225409&p=2
+  - https://mchladek.me/post/arch-mbp/
+ ---
+

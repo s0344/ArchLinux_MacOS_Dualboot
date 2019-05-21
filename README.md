@@ -409,8 +409,11 @@ All the source will be listed at the end of the guide.
   ```
   - Modify the values in the file.
   > Change fan speed: For my device, the lowest and highest is 1200 and 6500. (check sys file, google it for more details)
+  
   > Change temperature thersholds: I set it as 50,60,70 because I like it to be lower
+  
   > Change polling interval: I set it to 1 so it will be more responsive
+  
   > Change `get_temp` function since the directory is wrong (for me)
   ```c
   unsigned short get_temp()

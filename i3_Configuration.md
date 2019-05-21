@@ -4,7 +4,7 @@ A rough guide of rising i3 after installation. It will not be as detailed. Refer
 
   - after i3 download
   - modify bash_profile
-  - run `startx`
+  - run `startx` to start i3
   - download `zathura` `yay` `compton` `rofi` `polybar`
   - modify .bashrc
   - modify .i3 config

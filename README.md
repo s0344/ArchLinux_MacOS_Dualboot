@@ -504,7 +504,7 @@ All the source will be listed at the end of the guide.
  ---
 <a name="24"></a>
 ## 24. Other post installation stuff
-  - For more post installation stuff, go to this [link](https://medium.com/@philpl/arch-linux-running-on-my-macbook-2ea525ebefe3) starting from topic `Fixing lid closing to suspend` 
+  - For more post installation stuff, go to this [link](https://medium.com/@philpl/arch-linux-running-on-my-macbook-2ea525ebefe3). These two topics, `Fixing lid closing to suspend` and `fix suspend mode`, are recommanded
  ---
 <a name="25"></a>
 ## 25. Useful applications

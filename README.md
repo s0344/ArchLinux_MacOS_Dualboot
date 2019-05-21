@@ -306,6 +306,7 @@ All the source will be listed at the end of the guide.
   > If you skip theming and don't see Arch in boot loader (Since we manually detect arch during the theming section). Go back and undo the hide unused boot process and reboot again.
   
   - Log in with the username you created earlier then the password.
+  - ALL POST INSTALLATION GUIDE CAN BE DONE ANYTIME. YOU CAN INSTALL WINDOW MANAGER FIRST. 
  ---
 <a name="17"></a>
 ## 17. Wireless setup

@@ -368,6 +368,7 @@ All the source will be listed at the end of the guide.
   ```bash
   systemctl enable powertop.service
   ```
+  - More tools: [TLP](https://wiki.archlinux.org/index.php/TLP), [Acpid](https://wiki.archlinux.org/index.php/Acpid)
  ---
 <a name="20"></a>
 ## 20. Thermal Management
@@ -564,6 +565,10 @@ All the source will be listed at the end of the guide.
   ```bash
   amixer sset Master unmute
   ```
+  - Network Manager
+  > networkmanager
+  
+  > network-manager-applet
   - Yay (another pacman)
   > git clone <yay git site>
   ```bash

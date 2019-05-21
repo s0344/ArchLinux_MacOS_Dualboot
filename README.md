@@ -396,7 +396,7 @@ All the source will be listed at the end of the guide.
   sudo systemctl mbpfan.service
   ```
   - Since this doesn't work on my device, I spent some time an found another way to do it. (less efficient)
-  - I found the standard way is a enhanced version of [this](http://allanmcrae.com/2011/08/mbp-fan-daemon-update/). However, I download this and it doesn't work. At the end, I manually put the `.c` file under `/usr/bin/`, run a command to build, and write a service file for it to run on startup.
+  - I found the standard way is an enhanced version of [this](http://allanmcrae.com/2011/08/mbp-fan-daemon-update/). However, I download this and it doesn't work. At the end, I manually put the `.c` file under `/usr/bin/`, run a command to build, and write a service file for it to run on startup.
   - First download that file in link and unzip it
   ```bash
   tar xvf mbpfan-1.1-1.src.tar.gz

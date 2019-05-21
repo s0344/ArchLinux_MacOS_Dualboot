@@ -1,4 +1,4 @@
-# Rising after i3 install
+# Rising after i3 installation
 
 A rough guide of rising i3 after installation. It will not be as detailed. Refer to the `dotfiles` repo for more info of specific file.
 

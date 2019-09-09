@@ -574,6 +574,10 @@ All the source will be listed at the end of the guide.
   > network-manager-applet
   - Yay (another pacman)
   > git clone <yay git site>
+  - Trash-cli
+  > Trash can to prevent accident
+  > alias rm='echo "Use trash-put instead, if rm is needed use \rm"; false'
+  
   ```bash
   makepkg -sri
   ```
